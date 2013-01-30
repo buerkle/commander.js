@@ -319,7 +319,10 @@ Command.prototype.option = function(flags, description, fn, defaultValue){
     // when --no-* we make sure default is true
     if (false == option.bool) defaultValue = true;
     // preassign only if we have a default
-    if (undefined !== defaultValue) self[name] = defaultValue;
+    if (undefined !== defaultValue) {
+      self[name] = defaultValue;
+      option.defaultValue = defaultValue;
+    }
   }
 
   // register the option
@@ -720,7 +723,8 @@ Command.prototype.optionHelp = function(){
   return [pad('-h, --help', width) + '  ' + 'output usage information']
     .concat(this.options.map(function(option){
       return pad(option.flags, width)
-        + '  ' + option.description;
+        + '  ' + option.description
+        + (option.defaultValue !== undefined ? ' (Default: ' + option.defaultValue + ')' : '');
       }))
     .join('\n');
 };
